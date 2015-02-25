@@ -32,15 +32,22 @@ public class GameController : MonoBehaviour {
 					}
 					else if(SixenseInput.Controllers[1].JoystickY == -1.0f)
 					{
-						camera.transform.position = camera.transform.position + (camera.transform.forward * -Time.deltaTime);
+						camera.transform.position = camera.transform.position + 2*(camera.transform.forward * -Time.deltaTime);
 						//camera.transform.Translate(camera.transform.forward * -Time.deltaTime);
 					}
 					else if(SixenseInput.Controllers[1].JoystickY == 1.0f)
 					{
-						camera.transform.position = camera.transform.position + (camera.transform.forward * Time.deltaTime);
+						camera.transform.position = camera.transform.position + 2*(camera.transform.forward * Time.deltaTime);
 
 						//camera.transform.Translate(camera.transform.forward * Time.deltaTime);
+					}
+					else if(SixenseInput.Controllers[0].JoystickY == 1.0f){
+						camera.transform.position = camera.transform.position + 2 * new Vector3(0,1,0) * Time.deltaTime;
 
+					}
+					else if(SixenseInput.Controllers[0].JoystickY == -1.0f){
+						camera.transform.position = camera.transform.position + -2 * new Vector3(0,1,0) * Time.deltaTime;
+						
 					}
 				}
 			}
