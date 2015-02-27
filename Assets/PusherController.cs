@@ -17,13 +17,19 @@ public class PusherController : MonoBehaviour {
 		transform.Translate(x, y, z);
 		for ( uint i = 0; i < 2; i++ )
 		{
-
 			if ( SixenseInput.Controllers[i] != null )
 			{
 				if ( SixenseInput.Controllers[i].Enabled )
 				{
-					if(i == 1)
-						transform.localPosition = SixenseInput.Controllers[1].Position;
+					if(i == 0){
+						Vector3 position = SixenseInput.Controllers[0].Position;
+						position.y = position.y * 0.1f;
+						position.x = position.x * 0.1f - 5.0f;
+						position.z = position.z * 0.2f + 60.0f;
+						transform.localRotation = SixenseInput.Controllers[0].Rotation;
+						Debug.Log (position);
+						transform.localPosition = position;
+					}
 				}
 			}
 		}

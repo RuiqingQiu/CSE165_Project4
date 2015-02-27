@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
 	public GameObject block2_prefab;
 	public List<GameObject> block_list = new List<GameObject>();
 
+	public static bool show_loose = false;
 	private float block1x = 0.0f;
 	private float block1y = 0.9f;
 	private float block1z = -3.0f;
@@ -36,7 +37,7 @@ public class GameController : MonoBehaviour {
 		block1y = 0.9f;
 		block1z = -3.0f;
 		block2z = -2.75f;
-		float scale_offset = 0.03f;
+		float scale_offset = 0.05f;
 		//Init a jenga block
 		//Loop through the level
 		for (int i = 0; i < 54/3; i++) {
@@ -97,8 +98,8 @@ public class GameController : MonoBehaviour {
 			{
 				if ( SixenseInput.Controllers[i].Enabled )
 				{
-					Debug.Log (SixenseInput.Controllers[i].JoystickX);
-					Debug.Log (camera.transform.forward);
+					//Debug.Log (SixenseInput.Controllers[i].JoystickX);
+					//Debug.Log (camera.transform.forward);
 					if(i == 1){
 						if(SixenseInput.Controllers[1].JoystickX == -1.0f)
 						{
@@ -111,14 +112,21 @@ public class GameController : MonoBehaviour {
 						}
 						else if(SixenseInput.Controllers[1].JoystickY == -1.0f)
 						{
-							camera.transform.position = camera.transform.position + 2*(camera.transform.forward * -Time.deltaTime);
+							camera.transform.position = camera.transform.position + 4*(camera.transform.forward * -Time.deltaTime);
 							//camera.transform.Translate(camera.transform.forward * -Time.deltaTime);
 						}
 						else if(SixenseInput.Controllers[1].JoystickY == 1.0f)
 						{
-							camera.transform.position = camera.transform.position + 2*(camera.transform.forward * Time.deltaTime);
+							camera.transform.position = camera.transform.position + 4*(camera.transform.forward * Time.deltaTime);
 
 							//camera.transform.Translate(camera.transform.forward * Time.deltaTime);
+						}
+						//Restart the game
+						else if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.ONE)){
+							for(int j = 0; j < block_list.Count; j++){
+								Destroy(block_list[j]);
+							}
+							buildJenga();
 						}
 						//Button to check which tool to use
 						else if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.THREE)){
@@ -141,7 +149,9 @@ public class GameController : MonoBehaviour {
 									puller.SetActive(true);
 									break;
 							}
-
+						}
+						else if(SixenseInput.Controllers[1].GetButtonDown(SixenseButtons.TWO)){
+							show_loose = !show_loose;
 						}
 					}
 					else if(i == 0){
