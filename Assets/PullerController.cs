@@ -7,9 +7,11 @@ public class PullerController : MonoBehaviour {
 	float speed = 2.0f;
 	bool stick = false;
 	Collider connected_to;
-	SpringJoint joint;
+	FixedJoint joint;
 	float startTime = 0.0f;
 	Quaternion collider_q;
+	int state = 0;
+	Vector3 original_position;
 	// Use this for initialization
 	void Start () {
 		gameObject.renderer.material.color = Color.green;
@@ -47,21 +49,41 @@ public class PullerController : MonoBehaviour {
 						position.z = position.z * 0.2f + 60.0f;
 						Debug.Log (position);
 						transform.localPosition = position;
-						transform.localRotation = SixenseInput.Controllers[0].Rotation;
+						//transform.localRotation = SixenseInput.Controllers[0].Rotation;
 						if(SixenseInput.Controllers[i].GetButtonDown(SixenseButtons.ONE)){
 							if(stick){
 								stick = false;
 								connected_to.transform.parent = null;
 								gameObject.renderer.material.color = Color.green;
-								Destroy(joint);
-								collider.rigidbody.freezeRotation = false;
+								//Destroy(joint);
+								//collider.rigidbody.freezeRotation = false;
+								connected_to.rigidbody.useGravity = true;
+								connected_to.rigidbody.WakeUp();
 
-								collider.rigidbody.isKinematic = false;
+								//collider.rigidbody.isKinematic = false;
 								Destroy(gameObject.GetComponent<Rigidbody>());
 								startTime = 0.0f;
 								collider.transform.rotation = collider_q;
 							}
 						}
+						else if(SixenseInput.Controllers[i].GetButtonDown(SixenseButtons.BUMPER)){
+							if(stick){
+								if(state == 0){
+									Debug.Log ("state 0");
+									state = 1;
+									connected_to.transform.position = gameObject.transform.position;
+									connected_to.transform.rotation = Quaternion.Euler(0, 90, 0);
+								}
+								else{
+									Debug.Log ("state 1");
+									state = 0;
+									connected_to.transform.position = gameObject.transform.position;
+
+									connected_to.transform.rotation = Quaternion.identity;
+								}
+							}
+						}
+
 					}
 				}
 			}
@@ -75,12 +97,13 @@ public class PullerController : MonoBehaviour {
 			stick = true;
 			other.transform.parent = gameObject.transform;
 			connected_to = other;
-			collider_q = collider.transform.rotation;
-			joint = gameObject.AddComponent<SpringJoint>();
-			joint.connectedBody = other.rigidbody;
-			collider.rigidbody.isKinematic = true;
-			collider.rigidbody.freezeRotation = true;
-
+			other.rigidbody.useGravity = false;
+			connected_to.rigidbody.Sleep();
+			connected_to.rigidbody.velocity = new Vector3(0,0,0);
+			//joint = gameObject.AddComponent<FixedJoint>();
+			//joint.connectedBody = other.rigidbody;
+			//collider.rigidbody.isKinematic = true;
+			connected_to.rigidbody.freezeRotation = true;
 			gameObject.renderer.material.color = Color.red;
 
 		}

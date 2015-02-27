@@ -156,11 +156,11 @@ public class GameController : MonoBehaviour {
 					}
 					else if(i == 0){
 						if(SixenseInput.Controllers[0].JoystickY == 1.0f){
-							camera.transform.position = camera.transform.position + 2 * new Vector3(0,1,0) * Time.deltaTime;
+							camera.transform.position = camera.transform.position + 4 * new Vector3(0,1,0) * Time.deltaTime;
 
 						}
 						else if(SixenseInput.Controllers[0].JoystickY == -1.0f){
-							camera.transform.position = camera.transform.position + -2 * new Vector3(0,1,0) * Time.deltaTime;
+							camera.transform.position = camera.transform.position + -4 * new Vector3(0,1,0) * Time.deltaTime;
 							
 						}
 					}
